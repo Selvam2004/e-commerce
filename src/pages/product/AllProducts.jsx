@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
-import { Col, Container, Pagination, Row } from 'react-bootstrap'
+import { Col, Container, Form, Pagination, Row } from 'react-bootstrap'
 import Nav from '../home/Nav'
 import axios from 'axios';
  
@@ -10,15 +10,26 @@ function AllProducts() {
   const [totalPages, setTotalPages] = useState(0);
   const [product,setProduct]=useState([{}]);
   const [search,setSearch]=useState("");
-
+  const [elasticSearch,setElasticSearch]=useState(false); 
   useEffect(()=>{
-     axios.get(`${process.env.REACT_APP_API}/product/getProducts?page=${currentPage}&pageSize=${pageSize}&search=${search}`)
-     .then((res)=>{
-         setProduct(res.data.products);
-         setTotalPages(res.data.totalPages);
-     })
-     .catch(err=>console.log(err.message));
-  },[currentPage,pageSize,search])
+    if((elasticSearch===true)&&(search.length>0)){
+      axios.get(`${process.env.REACT_APP_API}/product/getElasticSearch?page=${currentPage}&pageSize=${pageSize}&search=${search}`)
+      .then((res)=>{
+          setProduct(res.data.updatedProducts);
+          setTotalPages(res.data.totalPages);
+      })
+      .catch(err=>console.log(err.message));
+    }
+    else{
+      axios.get(`${process.env.REACT_APP_API}/product/getProducts?page=${currentPage}&pageSize=${pageSize}&search=${search}`)
+      .then((res)=>{
+          setProduct(res.data.products);
+          setTotalPages(res.data.totalPages);
+      })
+      .catch(err=>console.log(err.message));
+    }
+
+  },[currentPage,pageSize,search,elasticSearch])
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -85,8 +96,23 @@ function AllProducts() {
     <div>
           <Nav/>
     <Container>
+      <Row>
+        <Col>
         <h2 className='mt-3'>All Products:</h2>
+        </Col>
+        <Col></Col>
+        <Col>
+        <Form className='mt-4 ms-5'>
+          <Form.Check // prettier-ignore
+           type="switch"
+           id="custom-switch"
+           label="Enable Elastic Search"
+           onChange={()=>setElasticSearch(!elasticSearch)}
+          />
+          </Form>
+        </Col>
 
+      </Row>
         <Row className='mb-4 mt-4'>
             <Col md={2}></Col>
             <Col md={7}>
