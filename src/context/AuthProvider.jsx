@@ -11,9 +11,7 @@ const AuthProvider = ({children}) => {
         token,
         isAuthenticated : !!token
        } 
-    });
-
-   
+    });   
 
     const Signin = async (user) => {
       try {
