@@ -134,7 +134,7 @@ function AllProducts() {
             </Col>
         </Row> 
 
-        <Row md={3} sm={2} xs={1} className='m-auto'> 
+        <Row className='m-auto'> 
           {product.map((data,i)=>{
            return( 
            <Col key={i}>
