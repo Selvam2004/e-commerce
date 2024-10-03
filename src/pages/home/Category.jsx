@@ -1,8 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
-function Category({details}) {
-  console.log(details.name);
+function Category({details}) { 
   return (
     <div>
     <Card style={{ width: '20rem' }} className='mb-3'>

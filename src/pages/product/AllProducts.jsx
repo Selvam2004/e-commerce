@@ -103,7 +103,7 @@ function AllProducts() {
         <Col></Col>
         <Col>
         <Form className='mt-4 ms-5'>
-          <Form.Check // prettier-ignore
+          <Form.Check 
            type="switch"
            id="custom-switch"
            label="Enable Elastic Search"

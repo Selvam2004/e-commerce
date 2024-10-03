@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'; 
+import { useContext, useEffect, useState } from 'react'; 
 import { Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form'; 
@@ -13,10 +13,15 @@ function SignUp(){
   const [errors,setErrors]=useState({});
   const {Signup} = useContext(AuthContext);
   const navigate= useNavigate();
-
+  useEffect(()=>{
+    const token = localStorage.getItem("token");
+    if(token){
+      navigate('/home');
+    }
+    // eslint-disable-next-line
+  },[])
   const submit =async ()=>{
-    const response = await Signup({name,email,password});
-    console.log(response.status);
+    const response = await Signup({name,email,password}); 
     if(response.success){
       navigate("/login");
     }
