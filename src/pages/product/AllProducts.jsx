@@ -3,16 +3,16 @@ import ProductCard from './ProductCard'
 import { Col, Container, Form, Pagination, Row } from 'react-bootstrap'
 import Nav from '../home/Nav'
 import axios from 'axios';
- 
+import '../../css/product.css'
+
 function AllProducts() {
   const [currentPage, setCurrentPage] = useState(1); 
   const [pageSize, setPageSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
   const [product,setProduct]=useState([{}]);
-  const [search,setSearch]=useState("");
-  const [elasticSearch,setElasticSearch]=useState(false); 
+  const [search,setSearch]=useState(""); 
   useEffect(()=>{
-    if((elasticSearch===true)&&(search.length>0)){
+    if(search.length>2){
       axios.get(`${process.env.REACT_APP_API}/product/getElasticSearch?page=${currentPage}&pageSize=${pageSize}&search=${search}`)
       .then((res)=>{
           setProduct(res.data.updatedProducts);
@@ -21,7 +21,7 @@ function AllProducts() {
       .catch(err=>console.log(err.message));
     }
     else{
-      axios.get(`${process.env.REACT_APP_API}/product/getProducts?page=${currentPage}&pageSize=${pageSize}&search=${search}`)
+      axios.get(`${process.env.REACT_APP_API}/product/getProducts?page=${currentPage}&pageSize=${pageSize}`)
       .then((res)=>{
           setProduct(res.data.products);
           setTotalPages(res.data.totalPages);
@@ -29,7 +29,7 @@ function AllProducts() {
       .catch(err=>console.log(err.message));
     }
 
-  },[currentPage,pageSize,search,elasticSearch])
+  },[currentPage,pageSize,search])
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -95,31 +95,30 @@ function AllProducts() {
   return (
     <div>
           <Nav/>
-    <Container>
-      <Row>
-        <Col>
-        <h2 className='mt-3'>All Products:</h2>
-        </Col>
-        <Col></Col>
-        <Col>
-        <Form className='mt-4 ms-5'>
-          <Form.Check 
-           type="switch"
-           id="custom-switch"
-           label="Enable Elastic Search"
-           onChange={()=>setElasticSearch(!elasticSearch)}
-          />
-          </Form>
-        </Col>
-
-      </Row>
+    <Container> 
+        <h2 className='mt-3'>All Products:</h2> 
         <Row className='mb-4 mt-4'>
             <Col md={2}></Col>
-            <Col md={7}>
-            <div className="input-group">
-                <input className="form-control p-2" type="search" onChange={e=>setSearch(e.target.value)} placeholder="Enter the name"/>
-                <button className="btn btn-success   col-sm-2 p-2" type="submit" >Search</button>
-            </div>  
+            <Col md={7}> 
+<div class="InputContainer">
+  <input
+    placeholder="Enter product name to search"
+    id="input"
+    class="input-pd"
+    name="text"
+    type="text"
+    onChange={e=>setSearch(e.target.value)}
+  />
+
+  <label class="labelforsearch" for="input">
+    <svg class="searchIcon" viewBox="0 0 512 512">
+      <path
+        d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+      ></path>
+    </svg>
+  </label>
+</div>
+
             </Col>
             <Col md={3}>
             <p className='ms-5 mt-2'>Limit:
@@ -134,14 +133,14 @@ function AllProducts() {
             </Col>
         </Row> 
 
-        <Row className='m-auto'> 
-          {product.map((data,i)=>{
+        <Row className='m-auto' md={3}> 
+          {product.length>0?product.map((data,i)=>{
            return( 
            <Col key={i}>
             <ProductCard  details={data}/> 
             </Col> 
            );
-          })}
+          }):<div className='m-auto'>"No results found"</div>}
 
         </Row>
         <div className='mt-4 mb-5 w-25 ps-5 m-auto'> 
