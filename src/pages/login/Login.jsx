@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, InputGroup } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form'; 
 import { AuthContext } from '../../context/AuthProvider';
@@ -12,6 +12,13 @@ function Login() {
     const [password,setPassword]=useState("");
     const [errors,setErrors]=useState({});
     const {Signin} = useContext(AuthContext);
+
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    // Toggle password visibility
+    const togglePasswordVisibility = () => {
+      setIsPasswordVisible(!isPasswordVisible);
+    };
     const navigate= useNavigate();
   
     const submit = async()=>{
@@ -57,12 +64,25 @@ function Login() {
       <Form.Control type="email" placeholder="Enter email" onChange={e=>setEmail(e.target.value)}/> 
       <span className='text-danger'>{errors.email}</span> 
     </Form.Group>
-
-    <Form.Group className="mb-3" controlId="password">
-      <Form.Label>Password</Form.Label>
-      <Form.Control type="password" placeholder="Password"  onChange={e=>setPassword(e.target.value)}/>
-      <span className='text-danger'>{errors.password}</span> 
-    </Form.Group> 
+    <Form.Group className="mb-3" >
+        <Form.Label>Password</Form.Label>
+        <InputGroup>
+          <Form.Control
+            type={isPasswordVisible ? 'text' : 'password'}
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            variant="secondary"
+            style={{width:"80px",boxShadow:"0px"}}
+            onClick={togglePasswordVisibility}
+            type="button"
+          >
+            {isPasswordVisible ? 'Hide ' : 'Show'}
+          </Button>
+        </InputGroup>
+      </Form.Group> 
     <p>Don't Have an account?<a href='/'>Sign up</a> </p>
     <div className='d-block text-center'>
     <Button variant="primary" type="submit" onClick={validate}>
